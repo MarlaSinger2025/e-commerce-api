@@ -1,14 +1,16 @@
-import { ZodType } from "zod";
-import type { Request, Response, NextFunction } from "express";
+import type { ZodObject } from "zod";
+import type { RequestHandler } from "express";
+import { z } from 'zod';
 
-export const valdiateBody = (schema: ZodType) => {
-    return (req:Request, res:Response, next: NextFunction) => {
-        const result = schema.safeParse(req.body);
-
-        if (!result.success) {
-            return res.status(400).json({ message: 'Invalid input', errors: result.error.issues});
-        }
-        req.body = result.data;
-        next();
-    };
-}
+export const valdiateBody = (zodSchema: ZodObject): RequestHandler => (req, res, next) => {
+  if (!req.body) {
+    next(new Error('Request body is missing', { cause: { status: 400}}));
+  }
+  const { data, error, success } = zodSchema.safeParse(req.body);
+  if (!success) {
+    next(new Error(z.prettifyError(error), { cause: { status: 400}}));
+  } else {
+    req.body = data;
+    next();
+  }
+};
