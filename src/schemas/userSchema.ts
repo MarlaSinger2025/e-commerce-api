@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const userInputSchema = z.strictObject({
     name: z.string().min(2, 'Requires min 2 chars'),
