@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
-import {Schema, model } from "mongoose";
-import { maxLength, minLength } from "zod";
- 
+
+import {Schema, model, set } from "mongoose";
+
+
+
 const UserSchema = new Schema ({
     name: {
         type: String,
@@ -23,6 +24,14 @@ const UserSchema = new Schema ({
         minLength: [8, 'Password needs to be at least 8 characters'],
         select: false
     }
+});
+
+// every time a User document is serialized to JSON (e.g. res.json(user)), the response has a clean id string instead of both _id and id.
+set('toJSON', {
+  virtuals: true,
+  transform: (doc, converted) => {
+    delete (converted as Partial<typeof converted>)._id;
+  }
 });
 
 export default model('User', UserSchema);
