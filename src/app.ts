@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import connectDB from './db/index.ts';
 connectDB();
+import userRoutes from './routes/userRoutes.ts';
 
 const app = express();
 
@@ -14,9 +15,9 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.json({ status: 'ok' });
-    res.send('eCommerce API');
 });
 
+app.use('/users', userRoutes);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

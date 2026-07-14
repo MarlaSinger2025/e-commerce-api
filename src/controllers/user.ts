@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import User from "#models/User";
-import {userInputSchema} from "#schemas/userSchema";
+import User from '../models/User.ts';
+import {userInputSchema} from '../schemas/userSchema.ts';
 import type { z } from 'zod';
 
 // A Data Transfer Object (DTO) is a plain TypeScript type that represents the exact JSON your API sends or receives.
@@ -36,7 +36,8 @@ export const getUserById: RequestHandler<IdParams, UserInputDTO> = async (req, r
 };
 
 // PUT/users/ :id
-export const updateUser: RequestHandler<IdParams, UserDTO, UserInputDTO> = async (req, res) => {
+// (also PATCH = partial update)
+export const updateUser: RequestHandler<IdParams, UserDTO, Partial<UserInputDTO>> = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedUser) throw new Error('User not found', { cause: { status: 404 }});
     res.status(200).json(updatedUser);
