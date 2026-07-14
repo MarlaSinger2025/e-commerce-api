@@ -3,7 +3,7 @@ import User from "#models/User";
 import {userInputSchema} from "#schemas/userSchema";
 import type { z } from 'zod';
 
-
+// A Data Transfer Object (DTO) is a plain TypeScript type that represents the exact JSON your API sends or receives.
 type UserInputDTO = z.infer<typeof userInputSchema>;
 type UserDTO = UserInputDTO & { id: string };
 type IdParams = { id: string};
