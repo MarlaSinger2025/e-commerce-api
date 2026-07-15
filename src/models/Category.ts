@@ -10,6 +10,15 @@ const CategorySchema = new Schema ({
     }
 });
 
+//Adding case-insensitive unique index using 'collation' so e.g. "Clothing" and "clothing" are considered 
+// the same value and can throw duplicate error
+CategorySchema.index(
+  { name: 1},
+  { unique: true,
+    collation: { locale: 'en', strength: 2},
+  }
+);
+
 // every time a User document is serialized to JSON (e.g. res.json(user)), the response has a clean id string instead of both _id and id.
 set('toJSON', {
   virtuals: true,
