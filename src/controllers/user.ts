@@ -30,7 +30,7 @@ export const createUser: RequestHandler<unknown, UserDTO, UserInputDTO> = async 
 
 // GET/users/ :id
 export const getUserById: RequestHandler<IdParams, UserInputDTO> = async (req, res ) => {
-    const user = await User.findById(req.params.id).lean();
+    const user = await User.findById(req.params.id);
     if (!user) throw new Error('User not found', { cause: { status: 404 }});
     res.status(200).json(user);
 };
