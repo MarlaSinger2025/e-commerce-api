@@ -7,6 +7,7 @@ const UserSchema = new Schema ({
     name: {
         type: String,
         required: [true, 'Name is required'],
+        unique: true,
         trim: true, // automatically deletes extra spaces at the start and end of a text string before saving it to the database
         minLength: [2, 'Min length is 2 characters'],
         maxLength: [50, 'Max length is 50 characters']

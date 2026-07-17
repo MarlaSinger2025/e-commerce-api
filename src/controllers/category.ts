@@ -15,19 +15,10 @@ export const getCategories : RequestHandler<unknown, CategoryInputDTO[]> = async
 };
 
 //POST /categories
-export const createCategory : RequestHandler<unknown, CatergoryDTO | {message: string}, CategoryInputDTO> = async (req, res) => {
+export const createCategory : RequestHandler<unknown, CatergoryDTO , CategoryInputDTO> = async (req, res) => {
    
-    try {
         const category = await Category.create(req.body satisfies CategoryInputDTO);
-         res.status(201).json(category);
-    } catch(error: unknown) {
-        if (error && typeof error === 'object' && 'code' in error &&
-            error.code === 11000) {
-            res.status(409).json({ message: 'Category already exists'})
-        } else {
-            res.status(500).json({ message: 'An unknown error occured'})
-        }
-    }
+    res.status(200).json(category);
 };
 
 

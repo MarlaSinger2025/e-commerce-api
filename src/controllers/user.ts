@@ -17,12 +17,7 @@ export const getUsers: RequestHandler<unknown,UserInputDTO[]> = async (req, res)
 
 // POST/users
 export const createUser: RequestHandler<unknown, UserDTO, UserInputDTO> = async (req, res) => {
-        const { email} = req.body;
-
-    // app-layer check for a friendly 409 instead of a raw E11000 from the DB's unique index (the actual guarantee) (code from Jimena)
-        const existingUser = await User.findOne({ email });
-        if (existingUser) throw new Error('Email already in use', { cause: { status: 409}});
-
+       
     // satisfies is a TypeScript operator. It does one thing: it checks "does this value's type match/fit this other type?"  (code from Jimena)
         const user = await User.create(req.body satisfies UserInputDTO);
         res.status(201).json(user);
