@@ -14,7 +14,7 @@ type IdParams = { id: string};
 // GET/products
 export const getProducts: RequestHandler<unknown,ProductInputDTO[]> = async (req, res) => {
     
-        const products = await Product.find();
+        const products = await Product.find(req.query);
         res.status(200).json(products.map((product) => product.toJSON() as unknown as ProductDTO));   
 };
 
