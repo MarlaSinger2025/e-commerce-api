@@ -12,7 +12,20 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
         }
         errorMessage = err.message;
     }
-    res.status(statusCode).json({ error: errorMessage });
+     if (err && typeof err === 'object' && 'code' in err && err.code === 11000) {
+
+        const keyValue = 'keyValue' in err ? err.keyValue : {};
+        const field = Object.keys(keyValue)[0];
+
+        if (field) {
+        const value = req.body[field];
+            res.status(409).json({ message: `${field} '${value}' already exists`});
+        } else {
+             res.status(409).json({ message: 'Duplicate value already exists' });
+        }
+            } else {
+        res.status(statusCode).json({ error: errorMessage })
+    }
 };
 
 export default errorHandler;

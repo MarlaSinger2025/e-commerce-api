@@ -10,6 +10,8 @@ const mongoUri = process.env.MONGODB_URI;
 const conn = await mongoose.connect(mongoUri);
     console.log(`MongoDB connected successfully: ${conn.connection.name}`);
 
+
+
 };
 
 export default connectDB;
