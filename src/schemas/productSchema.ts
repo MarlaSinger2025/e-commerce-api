@@ -1,10 +1,13 @@
 import { z } from 'zod';
+import { Types } from 'mongoose';
 
 export const productInputSchema = z.strictObject({
     name: z.string().min(2, 'Requires min 2 chars'),
     description: z.string().min(2, 'Requires min 2 chars'),
     price: z.number().nonnegative(), //Number must be greater than or equal to 0
-    //categoryId: z.string() //Is this right? 
+    categoryId:z.string().refine((val) => Types.ObjectId.isValid(val), {
+  message: 'Invalid ObjectId',
+}), //Is this right? 
 });
 
 // Schema for Product update - partial() makes every input field optial

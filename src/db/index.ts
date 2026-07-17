@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
@@ -10,8 +11,11 @@ const mongoUri = process.env.MONGODB_URI;
 const conn = await mongoose.connect(mongoUri);
     console.log(`MongoDB connected successfully: ${conn.connection.name}`);
 
-
-
 };
 
 export default connectDB;
+
+ // 👇 temporary database cleanup
+// await Product.deleteMany({});
+// await Product.syncIndexes();
+// console.log('Product collection reset and indexes synced');
