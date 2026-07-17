@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import Product from "../models/Product.ts";
-import { productInputSchema } from "../schemas/productSchema.ts";
+import { productInputSchema, type UpdatedProductInput } from "../schemas/productSchema.ts";
 import type { z } from 'zod';
 import mongoose from "mongoose";
 import Category from "../models/Category.ts";
@@ -20,8 +20,8 @@ export const getProducts: RequestHandler<unknown,ProductInputDTO[]> = async (req
 
 // POST/products
 export const createProduct: RequestHandler<unknown, ProductDTO, ProductInputDTO> = async (req, res) => {
-        
-            const { name, price, categoryId} = req.body;
+
+            const { categoryId} = req.body;
         
         if(!mongoose.Types.ObjectId.isValid(categoryId)) throw new Error('Invalid categoryId format!', {cause: { status: 400}})
         
@@ -32,6 +32,7 @@ export const createProduct: RequestHandler<unknown, ProductDTO, ProductInputDTO>
         res.status(201).json(product.toJSON() as unknown as ProductDTO);
 };
 
+
 // GET/products/ :id
 export const getProductById: RequestHandler<IdParams, ProductInputDTO> = async (req, res ) => {
     const product = await Product.findById(req.params.id);
@@ -41,7 +42,17 @@ export const getProductById: RequestHandler<IdParams, ProductInputDTO> = async (
 
 // PUT/products/ :id
 // (also PATCH = partial update)
-export const updateProduct: RequestHandler<IdParams, ProductDTO, Partial<ProductInputDTO>> = async (req, res) => {
+export const updateProduct: RequestHandler<IdParams, ProductDTO, UpdatedProductInput> = async (req, res) => {
+    
+    const { categoryId} = req.body;
+        
+        if(categoryId){
+        if(!mongoose.Types.ObjectId.isValid(categoryId)) throw new Error('Invalid categoryId format!', {cause: { status: 400}})
+            
+        const categoryExists = await Category.findById(new mongoose.Types.ObjectId(categoryId));
+        if(!categoryExists) throw new Error('Category not found!', {cause: { status: 404}});
+        }
+        
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedProduct) throw new Error('Product not found', { cause: { status: 404 }});
     res.status(200).json(updatedProduct.toJSON() as unknown as ProductDTO);
