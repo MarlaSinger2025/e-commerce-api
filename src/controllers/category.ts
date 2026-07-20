@@ -9,7 +9,7 @@ type IdParams = { id: string };
 
 //GET /categories (all)
 export const getCategories : RequestHandler<unknown, CategoryInputDTO[]> = async (req, res) => {
-
+  
     const categories = await Category.find();
     res.status(200).json(categories);
 };

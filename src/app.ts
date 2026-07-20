@@ -3,10 +3,13 @@ import cors from 'cors';
 import express from 'express';
 import connectDB from './db/index.ts';
 connectDB();
+import errorHandler from './middleware/errorHandler.ts';
+
 import userRoutes from './routes/userRoutes.ts';
 import categoryRoutes from './routes/categoryRoutes.ts';
 import productRoutes from './routes/productRoutes.ts';
-import errorHandler from './middleware/errorHandler.ts';
+import orderRoutes from './routes/orderRoutes.ts';
+
 
 const app = express();
 
@@ -23,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
 
 app.use(errorHandler);
 
