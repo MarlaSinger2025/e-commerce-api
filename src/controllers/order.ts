@@ -13,7 +13,7 @@ type IdParams = { id: string};
 //GET /orders
 export const getOrders: RequestHandler<unknown, OrderInputDTO[]> = async (req, res) => {
 
-    const orders = await Order.find();
+    const orders = await Order.find(req.query); // .query lets you add filter parameters, so rn you could filter the orders by ?userId
     res.status(200).json(orders.map((order) => order.toJSON() as unknown as OrderDTO));
 
 };
@@ -46,9 +46,10 @@ export const createOrder: RequestHandler<unknown, OrderDTO, OrderInputDTO> = asy
     const priceMap = new Map(foundProducts.map((product) => [product._id.toString(), product.price]));
 
     //6. Calculate Total: price * quantity , summed across all order lines
-    const total = orderedProducts.reduce((sum, item) => {
+    const total = Math.round(orderedProducts.reduce((sum, item) => {
         const price = priceMap.get(item.productId.toString())!;
-        return sum + price * item.quantity; },0);
+       return sum + price * item.quantity; 
+    },0) * 100 ) / 100;  // -> Math.round(sum *100) / 100 rounds the total sum to only 2 decimal places
 
     //7. Create the Order    
     const order = await Order.create({ userId, products: orderedProducts, total});
