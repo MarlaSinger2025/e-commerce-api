@@ -3,6 +3,13 @@ import cors from 'cors';
 import express from 'express';
 import connectDB from './db/index.ts';
 connectDB();
+import errorHandler from './middleware/errorHandler.ts';
+
+import userRoutes from './routes/userRoutes.ts';
+import categoryRoutes from './routes/categoryRoutes.ts';
+import productRoutes from './routes/productRoutes.ts';
+import orderRoutes from './routes/orderRoutes.ts';
+
 
 const app = express();
 
@@ -14,9 +21,14 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.json({ status: 'ok' });
-    res.send('eCommerce API');
 });
 
+app.use('/users', userRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
